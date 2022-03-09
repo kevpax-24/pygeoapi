@@ -77,7 +77,7 @@ class XarrayEDRProvider(BaseEDRProvider, XarrayProvider):
 
         query_params = {}
 
-        LOGGER.debug('Query parameters: {}'.format(kwargs))
+        LOGGER.debug('xarray_edr.XarrayEDRProvider.position.0 Query parameters: {}'.format(kwargs))
 
         LOGGER.debug('Query type: {}'.format(kwargs.get('query_type')))
 
@@ -108,7 +108,7 @@ class XarrayEDRProvider(BaseEDRProvider, XarrayProvider):
         if datetime_ is not None:
             query_params[self._coverage_properties['time_axis_label']] = datetime_  # noqa
 
-        LOGGER.debug('query parameters: {}'.format(query_params))
+        LOGGER.debug('xarray_edr.XarrayEDRProvider.position.1 Query parameters: {}'.format(query_params))
 
         try:
             if select_properties:

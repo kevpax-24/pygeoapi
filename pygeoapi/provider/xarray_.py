@@ -61,8 +61,10 @@ class XarrayProvider(BaseProvider):
                 open_func = xarray.open_zarr
             else:
                 open_func = xarray.open_dataset
+
             self._data = open_func(self.data)
             self._data = _convert_float32_to_float64(self._data)
+
             self._coverage_properties = self._get_coverage_properties()
 
             self.axes = [self._coverage_properties['x_axis_label'],
@@ -155,11 +157,11 @@ class XarrayProvider(BaseProvider):
         for name, var in self._data.variables.items():
             LOGGER.debug('Determining rangetype for {}'.format(name))
 
-            desc, units = None, None
+            desc=units=None
             if len(var.shape) >= 3:
-                parameter = self._get_parameter_metadata(
-                    name, var.attrs)
-                desc = parameter['description']
+                parameter = self._get_parameter_metadata(name,var.attrs)
+
+                desc  = parameter['description']
                 units = parameter['unit_label']
 
                 rangetype['field'].append({
@@ -204,9 +206,9 @@ class XarrayProvider(BaseProvider):
             else:
                 return read_data(self.data)
 
+        # select only variables of interest
         if len(range_subset) < 1:
             range_subset = self.fields
-
         data = self._data[[*range_subset]]
 
         if any([self._coverage_properties['x_axis_label'] in subsets,
@@ -217,7 +219,7 @@ class XarrayProvider(BaseProvider):
             LOGGER.debug('Creating spatio-temporal subset')
 
             query_params = {}
-            for key, val in subsets.items():
+            for key,val in subsets.items():
                 LOGGER.debug('Processing subset: {}'.format(key))
                 if data.coords[key].values[0] > data.coords[key].values[-1]:
                     LOGGER.debug('Reversing slicing from high to low')
@@ -254,7 +256,7 @@ class XarrayProvider(BaseProvider):
                     else:
                         query_params[self.time_field] = datetime_
 
-            LOGGER.debug('Query parameters: {}'.format(query_params))
+            LOGGER.debug('xarray_.XarrayProvider.query Query parameters: {}'.format(query_params))
             try:
                 data = data.sel(query_params)
             except Exception as err:
